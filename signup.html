@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - ResumeCraft</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Theme Manager -->
+    <script src="js/theme.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <!-- Theme Toggle Fixed -->
+    <div class="theme-switch-wrapper position-fixed top-0 end-0 m-3 z-3">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+            </div>
+        </label>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="area">
+        <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="col-md-6 col-lg-5">
+            <div class="glass-card fade-in">
+                <div class="text-center mb-4">
+                    <img src="img/logo4.png" alt="Logo" style="width: 80px; margin-bottom: 10px;">
+                    <h2 class="fw-bold text-primary">ResumeCraft</h2>
+                    <p class="text-muted">Create your account</p>
+                </div>
+
+                <form id="signupForm">
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="John Doe" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Min 6 characters"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="profileImage" class="form-label">Profile Image (Optional)</label>
+                        <input type="file" class="form-control" id="profileImage" accept="image/*">
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary-custom btn-lg">Sign Up</button>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account? <a href="login.html"
+                                class="text-decoration-none fw-bold">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script>
+        // Redirect if already logged in
+        auth.redirectIfLoggedIn();
+
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const profileImageInput = document.getElementById('profileImage');
+
+            // Validation
+            if (password.length < 6) {
+                Swal.fire('Error', 'Password must be at least 6 characters long.', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                Swal.fire('Error', 'Passwords do not match.', 'error');
+                return;
+            }
+
+            const registerUser = (base64Image) => {
+                const result = auth.register(fullName, email, password, base64Image);
+
+                if (result.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: result.message,
+                        icon: 'success',
+                        confirmButtonText: 'Login Now'
+                    }).then(() => {
+                        window.location.href = 'login.html';
+                    });
+                } else {
+                    Swal.fire('Error', result.message, 'error');
+                }
+            };
+
+            if (profileImageInput.files && profileImageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    registerUser(e.target.result);
+                };
+                reader.readAsDataURL(profileImageInput.files[0]);
+            } else {
+                registerUser(null);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeCraft</title>
+    <!-- Redirect logic -->
+    <script src="js/theme.js"></script>
+    <script>
+        const user = localStorage.getItem('loggedInUser');
+        if (user) {
+            window.location.href = 'dashboard.html';
+        } else {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+
+<body>
+    <p>Redirecting...</p>
+</body>
+
+</html>
